@@ -6,9 +6,28 @@ use std::os::unix::io::AsRawFd;
 use std::os::unix::prelude::CommandExt;
 use std::process::Command;
 use memfd::Memfd;
+use sysinfo::{ProcessExt, System, SystemExt};
 
 const APK_FILE: &[u8] = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/build/intermediates/apk/", env!("PROFILE"), "/amic.apk"));
 
+
+trait TermuxEnv {
+    fn repair_env(&mut self) -> &mut Self;
+}
+
+impl TermuxEnv for &mut Command {
+    fn repair_env(&mut self) -> &mut Self {
+        if let Ok("/data/data/com.termux/files/home/.suroot") = env::var("HOME").as_deref() {
+            let sys = System::new_all();
+            let process = sys.processes_by_exact_name("com.termux").next().unwrap();
+            process.environ().into_iter().for_each(|it| {
+                let (key, value) = it.split_once("=").unwrap();
+                self.env(key, value);
+            });
+        }
+        self
+    }
+}
 
 fn create_memfd() -> Result<Memfd, Box<dyn Error>> {
     let opts = memfd::MemfdOptions::default()
@@ -51,6 +70,7 @@ fn main() {
         .arg("--nice-name=amic")
         .arg("xyz.mufanc.amic.Main")
         .args(args)
+        .repair_env()
         .exec();
 
     eprintln!("Failed to spawn app_process: {err}")
