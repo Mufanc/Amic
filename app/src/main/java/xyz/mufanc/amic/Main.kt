@@ -2,13 +2,14 @@ package xyz.mufanc.amic
 
 import picocli.CommandLine
 import picocli.CommandLine.Command
+import xyz.mufanc.amic.module.FindClass
 import xyz.mufanc.amic.module.Service
 import kotlin.system.exitProcess
 
 @Command(
     name = "amic",
     description = [ "Android management instrumentation commandline" ],
-    subcommands = [ Service::class ],
+    subcommands = [ Service::class, FindClass::class ],
     mixinStandardHelpOptions = true,
 )
 class Main {

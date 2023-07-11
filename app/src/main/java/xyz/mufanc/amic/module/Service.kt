@@ -9,10 +9,23 @@ import xyz.mufanc.amic.common.Shell
 @Command(name = "service", description = ["System service operations"])
 class Service {
     companion object {
-        val PID_TRANSACTION = "_PID"
+        private val PID_TRANSACTION = "_PID"
             .reversed()
             .mapIndexed { i, ch -> ch.code.shl(i * 8) }
             .sum()
+
+        fun getServicePid(name: String): Int? {
+            val service = ServiceManager.getService(name) ?: return null
+            val req = Parcel.obtain()
+            val res = Parcel.obtain()
+            try {
+                service.transact(PID_TRANSACTION, req, res, 0)
+                return res.readInt()
+            } finally {
+                req.recycle()
+                req.recycle()
+            }
+        }
     }
 
     @Command(name = "pid", description = [ "Get the pid of a specific service" ])
@@ -20,21 +33,12 @@ class Service {
         @Parameters(paramLabel = "<name>", description = [ "service name" ])
         name: String
     ) {
-        val service = ServiceManager.getService(name)
-        if (service != null) {
-            val req = Parcel.obtain()
-            val res = Parcel.obtain()
-            try {
-                service.transact(PID_TRANSACTION, req, res, 0)
-                val pid = res.readInt()
-                println("Pid of `$name` service is $pid:")
-                Shell.exec("ps -p $pid")
-            } finally {
-                req.recycle()
-                res.recycle()
-            }
+        val pid = getServicePid(name)
+        if (pid != null) {
+            println("pid of `$name` service is $pid:")
+            Shell.exec("ps -p $pid")
         } else {
-            println("Service named `$name` not found!")
+            println("service named `$name` not found!")
         }
     }
 }
