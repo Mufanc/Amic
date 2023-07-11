@@ -1,5 +1,9 @@
 set -eux
-./gradlew :app:aRelease
-adb push app/build/outputs/apk/release/*-release-*.apk /data/local/tmp/amic.apk
-adb shell app_process -Djava.class.path=/data/local/tmp/amic.apk / xyz.mufanc.amic.Main "$@"
 
+DEPLOY_PATH="/data/local/tmp/amic.apk"
+
+./gradlew :app:aRelease
+
+adb push app/build/outputs/apk/release/*-release-*.apk "$DEPLOY_PATH"
+
+adb shell "CLASSPATH=$DEPLOY_PATH app_process / xyz.mufanc.amic.Main $*"

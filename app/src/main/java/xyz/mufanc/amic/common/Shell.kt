@@ -1,4 +1,4 @@
-package xyz.mufanc.amic.util
+package xyz.mufanc.amic.common
 
 object Shell {
     fun exec(command: String) {

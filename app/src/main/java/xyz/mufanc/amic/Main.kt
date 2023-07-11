@@ -1,14 +1,26 @@
 package xyz.mufanc.amic
 
-import xyz.mufanc.amic.modules.Cli
+import picocli.CommandLine
+import picocli.CommandLine.Command
+import xyz.mufanc.amic.module.Service
+import kotlin.system.exitProcess
 
-object Main {
-    @JvmStatic
-    fun main(vararg args: String) {
-        try {
-            Cli.parse(args)
-        } catch (err: Throwable) {
-            err.printStackTrace(System.err)
+@Command(
+    name = "amic",
+    description = [ "Android management instrumentation commandline" ],
+    subcommands = [ Service::class ],
+    mixinStandardHelpOptions = true,
+)
+class Main {
+    companion object {
+        @JvmStatic
+        fun main(vararg args: String) {
+            try {
+                val code = CommandLine(Main()).execute(*args)
+                exitProcess(code)
+            } catch (exception: Exception) {
+                exception.printStackTrace(System.err)
+            }
         }
     }
 }
