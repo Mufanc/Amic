@@ -8,6 +8,7 @@ import java.io.File
 import android.os.Process
 import android.system.Os
 import dalvik.system.PathClassLoader
+import xyz.mufanc.amic.utils.Common
 
 @Command(name = "findclass", description = [ "Find the .jar or .apk file that contains specific class" ])
 class FindClass : Runnable {
@@ -33,6 +34,8 @@ class FindClass : Runnable {
             }
             searchList.addAll(getProcessMappedJavaLibs(pid))
         }
+
+        searchList.remove(Common.currentApk().path)
 
         val count = searchList.count { jar ->
             val loader = PathClassLoader(jar, null)
