@@ -10,7 +10,7 @@ import android.system.Os
 import dalvik.system.PathClassLoader
 import xyz.mufanc.amic.utils.Common
 
-@Command(name = "findclass", description = [ "Find the .jar or .apk file that contains specific class" ])
+@Command(name = "findclass", description = [ "Find all .jar/.apk file that contains specific class" ])
 class FindClass : Runnable {
 
     @Option(names = [ "-v", "--visual" ])
