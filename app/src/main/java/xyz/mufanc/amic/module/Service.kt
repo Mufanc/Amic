@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.ServiceManager
 import picocli.CommandLine.Command
 import picocli.CommandLine.Parameters
-import xyz.mufanc.amic.common.Shell
+import xyz.mufanc.amic.utils.Shell
 
 @Command(name = "service", description = ["System service operations"])
 class Service {

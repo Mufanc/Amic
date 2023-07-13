@@ -23,3 +23,8 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 }
+
+dependencies {
+    compileOnly 'dev.rikka.tools.refine:annotation:4.3.0'
+    annotationProcessor 'dev.rikka.tools.refine:annotation-processor:4.3.0'
+}
