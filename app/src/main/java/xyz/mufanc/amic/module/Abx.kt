@@ -1,7 +1,7 @@
 package xyz.mufanc.amic.module
 
-import android.util.XmlHidden
 import android.util.Xml
+import android.util.XmlHidden
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlSerializer
 import picocli.CommandLine.Command

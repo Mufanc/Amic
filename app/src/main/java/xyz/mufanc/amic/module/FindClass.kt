@@ -1,14 +1,13 @@
 package xyz.mufanc.amic.module
 
 import android.content.Context
+import android.system.Os
+import dalvik.system.PathClassLoader
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
-import java.io.File
-import android.os.Process
-import android.system.Os
-import dalvik.system.PathClassLoader
 import xyz.mufanc.amic.utils.Common
+import java.io.File
 
 @Command(name = "findclass", description = [ "Find all .jar/.apk file that contains specific class" ])
 class FindClass : Runnable {
@@ -28,10 +27,7 @@ class FindClass : Runnable {
         val searchList = getProcessClasspath().toMutableSet()
 
         if (resolveApexPackage) {
-            if (Process.myUid() != 0) {
-                System.err.println("require root privilege!")
-                return
-            }
+            if (!Common.checkPermission()) return
             searchList.addAll(getProcessMappedJavaLibs(pid))
         }
 
