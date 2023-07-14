@@ -6,24 +6,21 @@ import android.util.ArrayMap
 import android.util.XmlHidden
 import org.xmlpull.v1.XmlPullParser
 import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
 import xyz.mufanc.amic.utils.Common
 import java.io.File
 
 @Command(name = "settings")
 object Settings {
-
     enum class Namespace {
-        ALL, GLOBAL, SYSTEM, SECURE;
+        GLOBAL, SYSTEM, SECURE;
         fun id() = name.lowercase()
     }
 
     private lateinit var observer: SettingsObserver
 
-    private val namespaces = Namespace.values()
-        .mapNotNull { it.takeIf { it != Namespace.ALL }?.id() }
-        .toSet()
-
+    private val namespaces = Namespace.values().map { it.id() }.toSet()
     private val pattern = "settings_(${namespaces.joinToString("|")}).xml".toRegex()
 
     data class Result<K, T>(
@@ -121,7 +118,7 @@ object Settings {
         println()
     }
 
-    private class SettingsObserver(private val nsTarget: Namespace) : FileObserver(getWatchDir(), MOVED_TO or MODIFY) {
+    private class SettingsObserver(private val nsTarget: Namespace?) : FileObserver(getWatchDir(), MOVED_TO or MODIFY) {
         override fun onEvent(event: Int, path: String?) {
             try {
                 if (path == null) return
@@ -129,7 +126,7 @@ object Settings {
                 val ns = (pattern.find(path) ?: return).groupValues[1]
                 val namespace = Namespace.valueOf(ns.uppercase())
 
-                if (nsTarget != Namespace.ALL && namespace != nsTarget) return
+                if (nsTarget != null && namespace != nsTarget) return
 
                 val after = SettingsForm.of(namespace)
                 val changes = cache[namespace]!!.compare(after) ?: return
@@ -156,13 +153,12 @@ object Settings {
 
     @Command(name = "watch", description = [ "Watch for settings changes" ])
     fun watch(
-        @Parameters(paramLabel = "[namespace]", defaultValue = "ALL", description = [ "GLOBAL, SYSTEM, SECURE, or default to ALL" ])
-        namespace: Namespace
+        @Parameters(paramLabel = "[namespace]", defaultValue = Option.NULL_VALUE, description = [ "one of GLOBAL, SYSTEM, SECURE, or default to all namespaces" ])
+        namespace: Namespace?
     ) {
         if (!Common.checkPermission()) return
-
+        println("Watching changes...")
         observer = SettingsObserver(namespace).apply { start() }
-
         System.`in`.readBytes()  // yield
     }
 }
