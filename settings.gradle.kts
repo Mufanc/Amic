@@ -16,5 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Amic"
 
-include ':app'
-include ':api-stub'
+include(":app")
+include(":api-stub")
+include(":module")
