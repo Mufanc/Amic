@@ -42,9 +42,15 @@ android {
     kotlinOptions {
         jvmTarget = androidKotlinJvmTarget
     }
+
+    buildFeatures {
+        aidl = true
+        buildConfig = true
+    }
 }
 
 dependencies {
     compileOnly(project(":api-stub"))
+    compileOnly("de.robv.android.xposed:api:82")
     implementation("info.picocli:picocli:4.7.4")
 }
