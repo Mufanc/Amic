@@ -2,8 +2,7 @@ plugins {
     id("com.android.library")
 }
 
-val versionCode: Int by rootProject.extra
-val versionName: String by rootProject.extra
+val amicVersionName: String by rootProject.extra
 
 val androidMinSdkVersion: Int by rootProject.extra
 val androidCompileSdkVersion: Int by rootProject.extra
@@ -45,7 +44,7 @@ androidComponents.onVariants { variant ->
     task<Zip>("zipModule$nameCapped") {
         dependsOn(prepareModuleTask)
         from(moduleDir)
-        archiveFileName.set("Amic-$versionName-$nameLowered.zip")
+        archiveFileName.set("Amic-$amicVersionName-$nameLowered.zip")
         destinationDirectory.set(File("$buildDir/outputs/zip/$nameLowered"))
     }
 }

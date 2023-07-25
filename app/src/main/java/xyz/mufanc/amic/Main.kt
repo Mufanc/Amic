@@ -5,6 +5,7 @@ import picocli.CommandLine
 import picocli.CommandLine.Command
 import xyz.mufanc.amic.module.Abx
 import xyz.mufanc.amic.module.FindClass
+import xyz.mufanc.amic.module.Manager
 import xyz.mufanc.amic.module.Monitor
 import xyz.mufanc.amic.module.Service
 import xyz.mufanc.amic.module.Settings
@@ -19,6 +20,7 @@ import kotlin.system.exitProcess
         Abx::class,
         Settings::class,
         Monitor::class,
+        Manager::class,
     ],
     mixinStandardHelpOptions = true,
 )

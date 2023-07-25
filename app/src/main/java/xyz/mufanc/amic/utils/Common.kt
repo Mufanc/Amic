@@ -11,7 +11,7 @@ object Common {
 
     fun checkPermission(): Boolean {
         if (Process.myUid() != 0) {
-            System.err.println("require root privilege!")
+            eprintln("require root privilege!")
             return false
         }
         return true

@@ -4,15 +4,23 @@ import android.os.Parcel
 import android.os.ServiceManager
 import picocli.CommandLine.Command
 import picocli.CommandLine.Parameters
+import xyz.mufanc.amic.module.service.CommandResultReceiver
 import xyz.mufanc.amic.utils.Shell
+import java.io.FileDescriptor
+import java.util.concurrent.Semaphore
+import java.util.concurrent.TimeUnit
 
 @Command(name = "service", description = ["System service operations"])
 class Service {
     companion object {
-        private val PID_TRANSACTION = "_PID"
-            .reversed()
-            .mapIndexed { i, ch -> ch.code.shl(i * 8) }
-            .sum()
+        private val PID_TRANSACTION = stringToTransactionCode("_PID")
+        private val CMD_TRANSACTION = stringToTransactionCode("_CMD")
+
+        private fun stringToTransactionCode(str: String): Int {
+            return str.reversed()
+                .mapIndexed { i, ch -> ch.code.shl(i * 8) }
+                .sum()
+        }
 
         fun getServicePid(name: String): Int? {
             val service = ServiceManager.getService(name) ?: return null
@@ -24,6 +32,26 @@ class Service {
             } finally {
                 req.recycle()
                 req.recycle()
+            }
+        }
+
+        fun command(serviceName: String, args: Array<String>) {
+            val service = ServiceManager.getService(serviceName) ?: return
+            val req = Parcel.obtain()
+            val res = Parcel.obtain()
+            try {
+                val await = Semaphore(0)
+                req.writeFileDescriptor(FileDescriptor.`in`)
+                req.writeFileDescriptor(FileDescriptor.out)
+                req.writeFileDescriptor(FileDescriptor.err)
+                req.writeStringArray(args)
+                req.writeStrongBinder(null)  // ShellCallback
+                req.writeParcelable(CommandResultReceiver(await), 0)
+                service.transact(CMD_TRANSACTION, req, res, 0)
+                await.tryAcquire(1, TimeUnit.SECONDS)
+            } finally {
+                req.recycle()
+                res.recycle()
             }
         }
     }

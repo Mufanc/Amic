@@ -17,8 +17,8 @@ val versionNamePrefix = "v1.0.0"
 val commitHash = "git rev-parse --short HEAD".execute()
 val commitCount = "git rev-list --count HEAD".execute().toInt()
 
-val versionName by extra("$versionNamePrefix.r$commitCount.$commitHash")
-val versionCode by extra(commitCount)
+val amicVersionName by extra("$versionNamePrefix.r$commitCount.$commitHash")
+val amicVersionCode by extra(commitCount)
 
 val androidMinSdkVersion by extra(29)
 val androidTargetSdkVersion by extra(33)

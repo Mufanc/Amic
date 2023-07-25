@@ -4,8 +4,8 @@ plugins {
     id("dev.rikka.tools.refine") version "4.3.0"
 }
 
-val versionCode: Int by rootProject.extra
-val versionName: String by rootProject.extra
+val amicVersionCode: Int by rootProject.extra
+val amicVersionName: String by rootProject.extra
 
 val androidMinSdkVersion: Int by rootProject.extra
 val androidCompileSdkVersion: Int by rootProject.extra
@@ -23,8 +23,11 @@ android {
         minSdk = androidMinSdkVersion
         targetSdk = androidTargetSdkVersion
 
-        versionName = versionName
-        versionCode = versionCode
+        versionName = amicVersionName
+        versionCode = amicVersionCode
+
+        buildConfigField("int", "VERSION_CODE", "$amicVersionCode")
+        buildConfigField("String", "VERSION_NAME", "\"$amicVersionName\"")
     }
 
     buildTypes {
