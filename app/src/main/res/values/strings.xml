@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Amic</string>
+    <string name="module_desc">Android Management Instrumentation Commands</string>
 </resources>
