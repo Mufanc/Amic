@@ -15,7 +15,7 @@ public interface IActivityController extends IInterface {
 
     abstract class Stub extends Binder implements IActivityController {
         public IBinder asBinder() {
-            throw new RuntimeException("STUB");
+            throw new RuntimeException("Stub!");
         }
     }
 }

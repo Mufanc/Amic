@@ -1,30 +1,30 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("dev.rikka.tools.refine") version "4.3.0"
+    alias(libs.plugins.agp.app)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hiddenapi.refine)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.aproc)
 }
 
-val versionCode: Int by rootProject.extra
-val versionName: String by rootProject.extra
-
-val androidMinSdkVersion: Int by rootProject.extra
-val androidCompileSdkVersion: Int by rootProject.extra
-val androidTargetSdkVersion: Int by rootProject.extra
-val androidSourceCompatibility: JavaVersion by rootProject.extra
-val androidTargetCompatibility: JavaVersion by rootProject.extra
-val androidKotlinJvmTarget: String by rootProject.extra
+val cfgMinSdkVersion: Int by rootProject.extra
+val cfgTargetSdkVersion: Int by rootProject.extra
+val cfgCompileSdkVersion: Int by rootProject.extra
+val cfgSourceCompatibility: JavaVersion by rootProject.extra
+val cfgTargetCompatibility: JavaVersion by rootProject.extra
+val cfgKotlinJvmTarget: JvmTarget by rootProject.extra
 
 android {
     namespace = "xyz.mufanc.amic"
-    compileSdk = androidCompileSdkVersion
+    compileSdk = cfgCompileSdkVersion
 
     defaultConfig {
         applicationId = "xyz.mufanc.amic"
-        minSdk = androidMinSdkVersion
-        targetSdk = androidTargetSdkVersion
-
-        versionName = versionName
-        versionCode = versionCode
+        minSdk = cfgMinSdkVersion
+        targetSdk = cfgTargetSdkVersion
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
@@ -35,20 +35,20 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = androidSourceCompatibility
-        targetCompatibility = androidTargetCompatibility
+        sourceCompatibility = cfgSourceCompatibility
+        targetCompatibility = cfgTargetCompatibility
     }
+}
 
-    kotlinOptions {
-        jvmTarget = androidKotlinJvmTarget
-    }
-
-    buildFeatures {
-        buildConfig = true
+kotlin {
+    compilerOptions {
+        jvmTarget.set(cfgKotlinJvmTarget)
     }
 }
 
 dependencies {
-    compileOnly(project(":api-stub"))
-    implementation("info.picocli:picocli:4.7.4")
+    compileOnly(project(":hiddenapi"))
+    implementation(libs.core.ktx)
+    implementation(libs.hiddenapi.runtime)
+    implementation(libs.picocli)
 }

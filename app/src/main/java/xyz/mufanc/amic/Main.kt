@@ -1,28 +1,23 @@
 package xyz.mufanc.amic
 
 import android.os.ProcessHidden
+import kotlinx.coroutines.Runnable
 import picocli.CommandLine
-import picocli.CommandLine.Command
-import xyz.mufanc.amic.module.Abx
-import xyz.mufanc.amic.module.FindClass
-import xyz.mufanc.amic.module.Monitor
-import xyz.mufanc.amic.module.Service
-import xyz.mufanc.amic.module.Settings
+import xyz.mufanc.amic.applets.ActivityMonitor
+import xyz.mufanc.aproc.annotation.AProcEntry
 import kotlin.system.exitProcess
 
-@Command(
+@CommandLine.Command(
     name = "amic",
     description = [ "Android Management Instrumentation Commands" ],
     subcommands = [
-        Service::class,
-        FindClass::class,
-        Abx::class,
-        Settings::class,
-        Monitor::class,
+        ActivityMonitor::class
     ],
-    mixinStandardHelpOptions = true,
+    mixinStandardHelpOptions = true
 )
-object Main {
+@AProcEntry
+object Main : Runnable {
+
     @JvmStatic
     fun main(vararg args: String) {
         try {
@@ -31,8 +26,12 @@ object Main {
                 isCaseInsensitiveEnumValuesAllowed = true
                 exitProcess(execute(*args))
             }
-        } catch (exception: Exception) {
-            exception.printStackTrace(System.err)
+        } catch (err: Throwable) {
+            err.printStackTrace(System.err)
         }
+    }
+
+    override fun run() {
+        CommandLine.usage(this, System.out)
     }
 }

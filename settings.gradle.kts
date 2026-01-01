@@ -1,8 +1,15 @@
 pluginManagement {
     repositories {
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
+        maven("https://jitpack.io")
     }
 }
 
@@ -11,12 +18,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://api.xposed.info/")
+        maven("https://jitpack.io")
     }
 }
 
 rootProject.name = "Amic"
 
 include(":app")
-include(":api-stub")
-include(":module")
+include(":hiddenapi")

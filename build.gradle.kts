@@ -1,29 +1,15 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application") version "8.0.2" apply false
-    id("com.android.library") version "8.0.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.8.20" apply false
+    alias(libs.plugins.agp.app) apply false
+    alias(libs.plugins.agp.lib) apply false
+    alias(libs.plugins.kotlin.android) apply false
 }
 
-fun String.execute(): String {
-    return Runtime.getRuntime()
-        .exec(this.split(" ").toTypedArray())
-        .apply { waitFor() }
-        .inputStream.bufferedReader().readText().trim()
-}
-
-val versionNamePrefix = "v1.0.0"
-
-val commitHash = "git rev-parse --short HEAD".execute()
-val commitCount = "git rev-list --count HEAD".execute().toInt()
-
-val versionName by extra("$versionNamePrefix.r$commitCount.$commitHash")
-val versionCode by extra(commitCount)
-
-val androidMinSdkVersion by extra(29)
-val androidTargetSdkVersion by extra(33)
-val androidCompileSdkVersion by extra(33)
-
-val androidSourceCompatibility by extra(JavaVersion.VERSION_11)
-val androidTargetCompatibility by extra(JavaVersion.VERSION_11)
-val androidKotlinJvmTarget by extra("11")
+val cfgMinSdkVersion by extra(30)
+val cfgTargetSdkVersion by extra(36)
+val cfgCompileSdkVersion by extra(36)
+val cfgSourceCompatibility by extra(JavaVersion.VERSION_17)
+val cfgTargetCompatibility by extra(JavaVersion.VERSION_17)
+val cfgKotlinJvmTarget by extra(JvmTarget.JVM_17)

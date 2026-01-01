@@ -1,6 +1,0 @@
-#!/system/bin/sh
-
-CLASSPATH="$(find /dev -maxdepth 1 -name 'amic-*' 2>/dev/null)/amic.apk"
-export CLASSPATH
-
-exec app_process /system/bin xyz.mufanc.amic.Main "$@"
