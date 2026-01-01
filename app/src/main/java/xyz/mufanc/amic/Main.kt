@@ -4,6 +4,7 @@ import android.os.ProcessHidden
 import kotlinx.coroutines.Runnable
 import picocli.CommandLine
 import xyz.mufanc.amic.applets.ActivityMonitor
+import xyz.mufanc.amic.applets.SimpleToast
 import xyz.mufanc.aproc.annotation.AProcEntry
 import kotlin.system.exitProcess
 
@@ -11,7 +12,8 @@ import kotlin.system.exitProcess
     name = "amic",
     description = [ "Android Management Instrumentation Commands" ],
     subcommands = [
-        ActivityMonitor::class
+        ActivityMonitor::class,
+        SimpleToast::class
     ],
     mixinStandardHelpOptions = true
 )
